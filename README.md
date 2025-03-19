@@ -6,7 +6,7 @@
 
 This repository provides a **simple yet scalable** Angular 18.1 project setup. It is designed as an **open-source template** for developers looking for a quick and organized start with Angular.
 
-## Features:
+## Features
 
 - **Angular 18.1**: Built with the latest Angular version for modern web development.
 - **Modular Architecture**: Clear separation of components, services, and models for easy maintenance.
