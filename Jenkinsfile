@@ -7,9 +7,9 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Clone Repo') {
             steps {
-                git 'https://github.com/AbdElrahman-Taha-99/angular-sample-small-project.git' 
+                sh 'git clone git@github.com:AbdElrahman-Taha-99/angular-sample-small-project.git' 
             }
         }
 
