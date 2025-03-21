@@ -76,7 +76,7 @@ pipeline {
         //        // Copy build to EC2 instance (update with your details)
         //        sh 'scp -i /path/to/your-ec2-key.pem -r dist/YOUR_PROJECT_NAME/* ec2-user@YOUR_EC2_IP:/var/www/html/'
 
-        //        // Restart Nginx on EC2 to apply changes
+                // Restart Nginx on EC2 to apply changes
         //        sh 'ssh -i /path/to/your-ec2-key.pem ec2-user@YOUR_EC2_IP "sudo systemctl restart nginx"'
         //    }
         //}
