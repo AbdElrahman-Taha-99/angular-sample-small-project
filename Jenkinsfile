@@ -15,8 +15,7 @@ pipeline {
 
         stage('Install Node.js') {
             steps {
-                sh 'nvm install $NODE_VERSION'
-                sh 'nvm use $NODE_VERSION'
+                sh 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install $NODE_VERSION && nvm use $NODE_VERSION'
             }
         }
 
