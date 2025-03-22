@@ -9,9 +9,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                sshagent(['github-ssh']){
-                    sh 'git clone git@github.com:AbdElrahman-Taha-99/angular-sample-small-project.git' 
-                }    
+                checkout scm
             }
         }
 
