@@ -12,7 +12,7 @@ pipeline {
                 checkout scm
             }
         }
-
+/*
         stage('Install Node.js') {
             steps {
                 sh 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install $NODE_VERSION && nvm use $NODE_VERSION'
@@ -78,7 +78,7 @@ pipeline {
         //        // Restart Nginx on EC2 to apply changes
         //        sh 'ssh -i /path/to/your-ec2-key.pem ec2-user@YOUR_EC2_IP "sudo systemctl restart nginx"'
         //    }
-        //}
+        //}*/
     }
 
     post {
