@@ -7,20 +7,20 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repo') {
+       /* stage('Clone Repo') {
             steps {
                 //checkout scm
                 sh 'git clone git@github.com:AbdElrahman-Taha-99/angular-sample-small-project.git'
             }
-        }
-/*
+        }*/
+
         stage('Install Node.js') {
             steps {
                 sh 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install $NODE_VERSION && nvm use $NODE_VERSION'
             }
         }
 
-        stage('Install Dependencies') {
+        /*stage('Install Dependencies') {
             steps {
                 sh 'npm ci'
             }
