@@ -20,13 +20,13 @@ pipeline {
             }
         }
 
-        /*stage('Install Dependencies') {
+        stage('Install Dependencies') {
             steps {
                 sh 'npm ci'
             }
         }
 
-        stage('Lint Code (Optional)') {
+       /* stage('Lint Code (Optional)') {
             steps {
                 sh 'npm run lint'
             }
