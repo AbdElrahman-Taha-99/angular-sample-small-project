@@ -7,10 +7,14 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repo') {
+        stage('Checkout') {
             steps {
-                //checkout scm
-                sh 'git clone git@github.com:AbdElrahman-Taha-99/angular-sample-small-project.git'
+                // Clean workspace before checkout (optional but recommended)
+                cleanWs()
+                
+                // Jenkins will handle the Git checkout
+                git branch: 'main', 
+                     url: 'git@github.com:AbdElrahman-Taha-99/angular-sample-small-project.git'
             }
         }
 
