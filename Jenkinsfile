@@ -7,12 +7,12 @@ pipeline {
     }
 
     stages {
-       /* stage('Clone Repo') {
+        stage('Clone Repo') {
             steps {
                 //checkout scm
                 sh 'git clone git@github.com:AbdElrahman-Taha-99/angular-sample-small-project.git'
             }
-        }*/
+        }
 
         stage('Install Node.js') {
             steps {
