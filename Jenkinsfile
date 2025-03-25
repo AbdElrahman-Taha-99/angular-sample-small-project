@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         CHROME_BIN = "/usr/bin/chromium-browser" // Needed for headless tests
-        NODE_VERSION = '18-alpine' // Use your Node.js version
+        NODE_VERSION = '18' // Use your Node.js version
     }
 
     stages {
