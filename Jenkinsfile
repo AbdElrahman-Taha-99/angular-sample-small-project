@@ -61,7 +61,7 @@ pipeline {
             }
         }
 
-        stage('Lint Code (Optional)') {
+        stage('Lint Code') {
             steps {
                 
                 sh '''
@@ -73,7 +73,7 @@ pipeline {
                     node --version
                     npm --version
                     
-                    npm run lint
+                    npx run lint
                 ''' 
             }
         }
