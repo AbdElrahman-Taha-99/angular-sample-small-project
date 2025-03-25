@@ -61,13 +61,13 @@ pipeline {
             }
         }
 
-       /* stage('Lint Code (Optional)') {
+        stage('Lint Code (Optional)') {
             steps {
                 sh 'npm run lint'
             }
         }
 
-        stage('Run Unit Tests') {
+        /*stage('Run Unit Tests') {
             steps {
                 sh 'ng test --watch=false --browsers=ChromeHeadless'
             }
