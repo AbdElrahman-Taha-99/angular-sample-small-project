@@ -80,7 +80,15 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
-                sh 'ng test --watch=false --browsers=ChromeHeadless'
+                sh '''
+                    export NVM_DIR="/home/ubuntu/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+                    node --version
+                    npm --version
+
+                    npx ng test --watch=false --browsers=ChromeHeadless
+                '''
             }
         }
 
