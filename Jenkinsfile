@@ -46,7 +46,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
+                // Get the absolute path of npm
+                def npmPath = sh(script: 'which npm', returnStdout: true).trim()
+                
+                // Use it in npm ci
+                sh "${npmPath} ci"
+
+                //sh 'npm ci'
             }
         }
 
