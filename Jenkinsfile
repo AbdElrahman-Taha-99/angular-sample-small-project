@@ -63,7 +63,18 @@ pipeline {
 
         stage('Lint Code (Optional)') {
             steps {
-                sh 'npm run lint'
+                
+                sh '''
+                    # Load NVM (same as in Install Node.js stage)
+                    export NVM_DIR="/home/ubuntu/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    
+                    # Verify Node.js is available
+                    node --version
+                    npm --version
+                    
+                    npm run lint
+                ''' 
             }
         }
 
