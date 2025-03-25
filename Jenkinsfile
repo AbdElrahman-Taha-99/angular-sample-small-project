@@ -20,7 +20,27 @@ pipeline {
 
         stage('Install Node.js') {
             steps {
-                sh 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install $NODE_VERSION && nvm use $NODE_VERSION'
+                //sh 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install $NODE_VERSION && nvm use $NODE_VERSION'
+                sh '''
+                    # Explicitly set NVM directory to ubuntu user's installation
+                    export NVM_DIR="/home/ubuntu/.nvm"
+                    
+                    # Source NVM if exists, otherwise fail clearly
+                    if [ -s "$NVM_DIR/nvm.sh" ]; then
+                        . "$NVM_DIR/nvm.sh"
+                    else
+                        echo "❌ ERROR: NVM not found at $NVM_DIR/nvm.sh"
+                        exit 1
+                    fi
+                    
+                    # Install specific Node version (define this at pipeline top)
+                    nvm install $NODE_VERSION || { echo "❌ Node installation failed"; exit 1; }
+                    nvm use $NODE_VERSION
+                    
+                    # Verify installation
+                    node --version || { echo "❌ Node not available"; exit 1; }
+                    npm --version || { echo "❌ NPM not available"; exit 1; }
+                '''
             }
         }
 
