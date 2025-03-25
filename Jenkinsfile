@@ -1,5 +1,5 @@
 pipeline {
-    agent agent1
+    agent { node { label 'agent1' } }
 
     environment {
         CHROME_BIN = "/usr/bin/chromium-browser" // Needed for headless tests
