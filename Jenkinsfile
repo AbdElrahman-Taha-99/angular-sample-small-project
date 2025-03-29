@@ -87,7 +87,11 @@ pipeline {
                     node --version
                     npm --version
 
-                    npx ng test --watch=false --browsers=ChromeHeadless
+                    # Ensure Chromium is correctly set
+                    export CHROME_BIN=$(which chromium-browser)
+                    
+                    # Run tests with ChromeHeadless
+                    npx ng test --no-watch --browsers=ChromeHeadless --code-coverage
                 '''
             }
         }
