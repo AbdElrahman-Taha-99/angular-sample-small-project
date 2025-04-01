@@ -22,6 +22,7 @@ pipeline {
             steps {
                 //sh 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install $NODE_VERSION && nvm use $NODE_VERSION'
                 sh '''
+                    id
                     # Explicitly set NVM directory to ubuntu user's installation
                     export NVM_DIR="/home/ubuntu/.nvm"
                     
