@@ -12,7 +12,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "e2e": "cypress run", 
+    "perf": "lighthouse https://your-app-url.com --output=json --output-path=./report.json",
+    "security": "zap-cli quick-scan -u https://your-app-url.com"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +44,9 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "cypress": "^13.8.1",
+    "lighthouse": "^10.2.0",
+    "zap-cli": "^0.3.4",
     "typescript": "~5.7.2"
   }
 }

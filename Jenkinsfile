@@ -20,7 +20,6 @@ pipeline {
 
         stage('Install Node.js') {
             steps {
-                //sh 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install $NODE_VERSION && nvm use $NODE_VERSION'
                 sh '''
                     id
                     # Explicitly set NVM directory to ubuntu user's installation
@@ -97,12 +96,37 @@ pipeline {
             }
         }
 
-        //stage('Build Angular App') {
-        //    steps {
-        //        sh 'ng build --configuration=production'
-        //    }
-        //}
+         // ✅ NEW: Integration / End-to-End Testing using Cypress
+        stage('Run E2E Tests') {
+            steps {
+                sh '''
+                    export NVM_DIR="/home/ubuntu/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
+                    npx cypress run --browser chrome
+                '''
+            }
+        }
+
+        // ✅ NEW: Performance Testing using Lighthouse
+        stage('Performance Testing') {
+            steps {
+                sh '''
+                    npm install -g lighthouse
+                    lighthouse http://localhost:4200 --quiet --chrome-flags="--headless" --output=json --output-path=./lighthouse-results.json
+                '''
+            }
+        }
+
+        // ✅ NEW: Security Testing using OWASP ZAP
+        stage('Security Testing') {
+            steps {
+                sh '''
+                    docker run -v $(pwd):/zap/wrk -t owasp/zap2docker-stable zap-baseline.py -t http://localhost:4200 -J zap-report.json
+                '''
+            }
+        }
+        
         stage('Build Docker Image') {
             steps {
                 script {
@@ -110,16 +134,6 @@ pipeline {
                 }
             }
         }
-
-        /*stage('Login to Docker Hub') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    }
-                }
-            }
-        }*/
 
         stage('Push Image to Registry') {
             steps {
