@@ -4,6 +4,7 @@ pipeline {
     environment {
         CHROME_BIN = "/usr/bin/chromium-browser" // Needed for headless tests
         NODE_VERSION = '18' // Use your Node.js version
+        APP_URL = "http://40.172.189.21:4200"
     }
 
     stages {
@@ -25,21 +26,17 @@ pipeline {
                     # Explicitly set NVM directory to ubuntu user's installation
                     export NVM_DIR="/home/ubuntu/.nvm"
                     
-                    # Source NVM if exists, otherwise fail clearly
-                    if [ -s "$NVM_DIR/nvm.sh" ]; then
-                        . "$NVM_DIR/nvm.sh"
-                    else
-                        echo "❌ ERROR: NVM not found at $NVM_DIR/nvm.sh"
-                        exit 1
-                    fi
+                    # Source NVM 
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    
                     
                     # Install specific Node version (define this at pipeline top)
-                    nvm install $NODE_VERSION || { echo "❌ Node installation failed"; exit 1; }
+                    nvm install $NODE_VERSION
                     nvm use $NODE_VERSION
                     
                     # Verify installation
-                    node --version || { echo "❌ Node not available"; exit 1; }
-                    npm --version || { echo "❌ NPM not available"; exit 1; }
+                    node --version 
+                    npm --version 
                 '''
             }
         }
@@ -50,11 +47,7 @@ pipeline {
                     # Load NVM (same as in Install Node.js stage)
                     export NVM_DIR="/home/ubuntu/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    
-                    # Verify Node.js is available
-                    node --version
-                    npm --version
-                    
+
                     # Install dependencies
                     npm ci
                 '''            
@@ -95,25 +88,41 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t my-angular-app .'
+                }
+            }
+        }
+
+        stage('Run Container Locally') {
+            steps {
+                script {
+                    sh 'docker run -d -p 4200:80 --name angular-container my-angular-app'
+                }
+            }
+        }
 
          // ✅ NEW: Integration / End-to-End Testing using Cypress
-        stage('Run E2E Tests') {
+        stage('Run E2E Tests (Cypress)') {
             steps {
                 sh '''
                     export NVM_DIR="/home/ubuntu/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-                    npx cypress run --browser chrome
+                    
+                    npx cypress run --config baseUrl=http://localhost:4200
+                    # npx cypress run --browser chrome
                 '''
             }
         }
 
         // ✅ NEW: Performance Testing using Lighthouse
-        stage('Performance Testing') {
+        stage('Performance Testing (Lighthouse)') {
             steps {
                 sh '''
-                    npm install -g lighthouse
-                    lighthouse http://localhost:4200 --quiet --chrome-flags="--headless" --output=json --output-path=./lighthouse-results.json
+                    docker run --rm --network=host femtopixel/google-lighthouse $APP_URL --chrome-flags="--headless" --output json > lighthouse-report.json
                 '''
             }
         }
@@ -122,16 +131,9 @@ pipeline {
         stage('Security Testing') {
             steps {
                 sh '''
-                    docker run -v $(pwd):/zap/wrk -t owasp/zap2docker-stable zap-baseline.py -t http://localhost:4200 -J zap-report.json
+                    docker run --rm -v $(pwd):/zap/wrk -t owasp/zap2docker-stable zap-baseline.py -t $APP_URL -J zap-report.json
+                    # docker run -v $(pwd):/zap/wrk -t owasp/zap2docker-stable zap-baseline.py -t http://localhost:4200 -J zap-report.json
                 '''
-            }
-        }
-        
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh 'docker build -t my-angular-app .'
-                }
             }
         }
 
