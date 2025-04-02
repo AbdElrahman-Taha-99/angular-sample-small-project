@@ -4,7 +4,7 @@ pipeline {
     environment {
         CHROME_BIN = "/usr/bin/chromium-browser" // Needed for headless tests
         NODE_VERSION = '18' // Use your Node.js version
-        APP_URL = "http://40.172.189.21:4200"
+        APP_URL = "http://40.172.189.21:80"
     }
 
     stages {
@@ -92,7 +92,11 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t my-angular-app .'
+                    sh '''
+                        docker stop $(docker ps -a -q)
+                        docker rm $(docker ps -a -q)
+                        docker build -t my-angular-app .
+                    '''
                 }
             }
         }
@@ -100,7 +104,7 @@ pipeline {
         stage('Run Container Locally') {
             steps {
                 script {
-                    sh 'docker run -d -p 4200:80 --name angular-container my-angular-app'
+                    sh 'docker run -d -p 80:80 --name angular-container my-angular-app'
                 }
             }
         }
@@ -115,7 +119,7 @@ pipeline {
                     # npm install cypress --save-dev (I installed it on the node machine)
                     # sudo apt-get install libgtk2.0-0t64 libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
                     
-                    npx cypress run --config baseUrl=http://localhost:4200
+                    npx cypress run --config baseUrl=http://localhost:80
                     
                     # npx cypress run --browser chrome
                 '''
