@@ -112,7 +112,11 @@ pipeline {
                     export NVM_DIR="/home/ubuntu/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     
+                    # npm install cypress --save-dev (I installed it on the node machine)
+                    # sudo apt-get install libgtk2.0-0t64 libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
+                    
                     npx cypress run --config baseUrl=http://localhost:4200
+                    
                     # npx cypress run --browser chrome
                 '''
             }
